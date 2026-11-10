@@ -79,6 +79,18 @@ async def api_live_state(request):
         briefing = generate_ares_briefing(
             levels, fvgs, scan["setups"], macro, news, clocks
         )
+        atom_team = generate_atom_team_reports(
+            df=df,
+            levels=levels,
+            fvgs=fvgs,
+            setups=scan["setups"],
+            live_checklist=scan["live_checklist"],
+            macro=macro,
+            news_info=news,
+            clocks=clocks,
+            mt5_status=mt5_status,
+            journal_stats=journal.get("stats", {}),
+        )
 
         # Limitar velas enviadas al frontend para máxima fluidez 60fps (últimas 500 velas)
         df_tail = df.iloc[-500:] if len(df) > 500 else df
@@ -97,6 +109,8 @@ async def api_live_state(request):
             "setups": scan["setups"][:12],
             "markers": visible_markers,
             "live_checklist": scan["live_checklist"],
+            "sniper_ticket": scan.get("sniper_ticket"),
+            "active_sniper_setup": scan.get("active_sniper_setup"),
             "briefing": briefing,
             "atom_team": atom_team,
             "macro": macro,

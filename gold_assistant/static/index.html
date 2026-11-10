@@ -7,21 +7,29 @@
   <link rel="stylesheet" href="/static/styles.css" />
   <script src="/static/lightweight-charts.js"></script>
 </head>
-<body>
+<body class="mode-zen">
 
   <!-- =====================================================================
        TOP TELEMETRY BAR
        ===================================================================== -->
   <header class="top-header">
     <div class="brand-block">
+      <button class="btn-hamburger" id="btn-toggle-menu" title="Abrir Menú de Herramientas">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <div class="brand-logo">AT</div>
       <div>
         <div class="brand-title">
           ATOM <span class="live-dot" id="hdr-live-dot"></span>
-          <span class="badge badge-blue">XAU/USD · FUNDINGPIPS 10K</span>
+          <span class="badge badge-cyan">XAU/USD · $10K</span>
         </div>
         <div class="brand-sub" id="hdr-status-sub">Conectando con motor institucional...</div>
       </div>
+      <button class="btn-mode-toggle" id="btn-toggle-zen" title="Alternar entre Vista Simple (Zen) y Vista Completa (Pro)">
+        🧘 Modo Simple: ACTIVO
+      </button>
     </div>
 
     <div class="telemetry-strip">
@@ -33,7 +41,7 @@
         </div>
       </div>
 
-      <div class="tele-pill">
+      <div class="tele-pill zen-hide">
         <span class="tele-label">Rango Diario (ADR 14D)</span>
         <div class="tele-val">
           <span id="hdr-adr-text">— / — pts</span>
@@ -41,7 +49,7 @@
         </div>
       </div>
 
-      <div class="tele-pill">
+      <div class="tele-pill zen-hide">
         <span class="tele-label">Correlación DXY / US10Y</span>
         <div class="tele-val">
           <span id="hdr-dxy">DXY —</span>
@@ -58,7 +66,7 @@
         </div>
       </div>
 
-      <div class="tele-pill">
+      <div class="tele-pill zen-hide">
         <span class="tele-label">Filtro Macro USD (±5m)</span>
         <div class="tele-val">
           <span class="badge badge-green" id="hdr-news-badge">CARGANDO</span>
@@ -68,9 +76,21 @@
   </header>
 
   <!-- =====================================================================
-       NAVIGATION TABS
+       SEMÁFORO DE ESTADO INSTITUCIONAL PARA PRINCIPIANTES
        ===================================================================== -->
-  <nav class="nav-bar">
+  <div id="master-status-banner" class="master-banner banner-monitoring">
+    <div class="banner-icon" id="banner-icon">🟡</div>
+    <div class="banner-body">
+      <div class="banner-title" id="banner-title">BOT VIGILANDO EL MERCADO · ESPERANDO OPORTUNIDAD</div>
+      <div class="banner-desc" id="banner-desc">ATOM está analizando las 5 reglas en vivo. Tu dinero está protegido: cuando se cumplan las 5 reglas, sonará la campana y aparecerá tu orden lista para copiar en MetaTrader.</div>
+    </div>
+    <button class="btn-guide" id="btn-open-guide">❓ Guía para Principiantes</button>
+  </div>
+
+  <!-- =====================================================================
+       NAVIGATION TABS (Accesibles también desde el Menú Hamburguesa)
+       ===================================================================== -->
+  <nav class="nav-bar zen-hide">
     <div class="nav-tabs">
       <button class="nav-tab active" data-tab="tab-live">📡 Radar & Puntos de Entrada en Vivo</button>
       <button class="nav-tab" data-tab="tab-replay">⏪ Simulador Replay Vela a Vela</button>
@@ -95,9 +115,9 @@
         <div class="chart-toolbar">
           <div class="toolbar-group">
             <select id="live-source-select" title="Fuente de cotizaciones en vivo">
-              <option value="GC=F">XAU/USD · Institucional (CME GC)</option>
-              <option value="PAXGUSDT">PAXG/USD · Oro Físico 24/7 (Vivo Fin de Semana)</option>
-              <option value="MT5">MetaTrader 5 · Terminal Local</option>
+              <option value="GC=F">XAU/USD · CME GC</option>
+              <option value="PAXGUSDT">PAXG/USD · Oro 24/7</option>
+              <option value="MT5">MetaTrader 5</option>
             </select>
 
             <button class="tf-btn" data-tf="1m">1m</button>
@@ -107,20 +127,22 @@
           </div>
 
           <div class="toolbar-group">
-            <button class="layer-chip active" data-layer="killzone" title="Sombreado de ventana operativa 09:00 - 11:30 AM Venezuela">Killzone NY</button>
-            <button class="layer-chip active" data-layer="sessions" title="Cajas de rango Asian High/Low y London High/Low">Asian & London</button>
-            <button class="layer-chip active" data-layer="pdhpdl" title="Previous Day High, Low y 50% Equilibrium">PDH / PDL / EQ</button>
-            <button class="layer-chip active" data-layer="fvgs" title="Fair Value Gaps (BISI/SIBI) + 50% Consequent Encroachment">FVGs (50% CE)</button>
-            <button class="layer-chip active" data-layer="markers" title="Marcadores automáticos de Sweep, CISD y Entrada">Sweeps & CISD</button>
-            <button class="layer-chip active" data-layer="position" title="Dibujo de caja Riesgo/Beneficio (Entrada, SL, TP1, TP2)">Caja R:R</button>
-          </div>
-
-          <div class="toolbar-group">
-            <button class="btn btn-sm btn-outline-accent" id="btn-pick-entry" title="Haz clic aquí y luego clic en cualquier precio del gráfico para fijar tu Entrada">🎯 Fijar Entrada</button>
-            <button class="btn btn-sm btn-outline-accent" id="btn-pick-sl" title="Haz clic aquí y luego clic en el gráfico para fijar tu Stop Loss">🛑 Fijar SL</button>
-            <button class="btn btn-sm" id="btn-auto-refresh" data-on="true">⏱ Auto 12s: ON</button>
             <button class="btn btn-sm btn-accent" id="btn-refresh-now">🔄 Actualizar</button>
             <button class="btn btn-sm" id="btn-fit-chart" title="Restaurar zoom en las últimas velas">⤢ Ajustar</button>
+            <button class="btn btn-sm btn-outline-accent" id="btn-open-tools-drawer" title="Abrir capas y herramientas avanzadas">🛠️ Herramientas & Capas</button>
+          </div>
+
+          <!-- Capas ocultadas de la barra principal (accesibles en el menú hamburguesa / drawer) -->
+          <div class="toolbar-group" style="display:none;">
+            <button class="layer-chip active" data-layer="killzone">Killzone NY</button>
+            <button class="layer-chip active" data-layer="sessions">Asian & London</button>
+            <button class="layer-chip active" data-layer="pdhpdl">PDH / PDL / EQ</button>
+            <button class="layer-chip active" data-layer="fvgs">FVGs (50% CE)</button>
+            <button class="layer-chip active" data-layer="markers">Sweeps & CISD</button>
+            <button class="layer-chip active" data-layer="position">Caja R:R</button>
+            <button class="btn btn-sm" id="btn-pick-entry">🎯 Entrada</button>
+            <button class="btn btn-sm" id="btn-pick-sl">🛑 SL</button>
+            <button class="btn btn-sm" id="btn-auto-refresh">⏱ Auto</button>
           </div>
         </div>
 
@@ -143,174 +165,233 @@
       <!-- COLUMNA DERECHA: CHECKLIST 5 REGLAS + CALCULADORA FUNDINGPIPS -->
       <aside class="right-dock">
 
-        <!-- CARD 1: GUARDIÁN DE LAS 5 REGLAS -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">🛡️ Guardián · Las 5 Reglas de Oro</div>
-            <span class="badge badge-blue" id="chk-score-badge">0 / 5</span>
+        <!-- CARD 1: GUARDIÁN DE LAS 5 REGLAS (COLAPSABLE / MINIMIZABLE) -->
+        <div class="card card-collapsible" id="card-guardian">
+          <div class="card-header cursor-pointer" id="header-guardian">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="collapse-icon" id="collapse-icon-guardian">▾</span>
+              <div class="card-title">🛡️ Guardián · 5 Reglas</div>
+            </div>
+
+            <!-- Mini Pills en tiempo real cuando está minimizado -->
+            <div class="mini-rule-pills" id="guardian-mini-pills">
+              <span class="mini-pill mini-pill-pass" id="mini-r1" title="R1. Horario Seguro">R1 ✓</span>
+              <span class="mini-pill mini-pill-pass" id="mini-r2" title="R2. Barrida">R2 ✓</span>
+              <span class="mini-pill mini-pill-pass" id="mini-r3" title="R3. Desplazamiento">R3 ✓</span>
+              <span class="mini-pill mini-pill-wait" id="mini-r4" title="R4. Punto 50% CE">R4 ⏳</span>
+              <span class="mini-pill mini-pill-pass" id="mini-r5" title="R5. Riesgo $50">R5 ✓</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button id="btn-toggle-sound" style="background:var(--bg-elevated);border:1px solid var(--border);color:#f0f6fc;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;" title="Alternar Sonido de Disparo MT5">🔊 ON</button>
+              <button id="btn-test-sniper" style="background:#1f6feb;border:1px solid #388bfd;color:#fff;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer;" title="Probar Alerta y Boleto MT5">PRUEBA MT5</button>
+              <span class="badge badge-blue" id="chk-score-badge">0 / 5</span>
+              <button class="btn-micro" id="btn-collapse-guardian" title="Minimizar / Expandir Guardián" style="background:transparent;border:none;color:var(--fg-muted);cursor:pointer;font-size:14px;padding:0 4px;">−</button>
+            </div>
           </div>
 
-          <div class="rule-list" id="live-checklist-container">
-            <!-- Renderizado dinámicamente por app.js -->
-          </div>
+          <div class="card-collapsible-body" id="body-guardian">
+            <div class="rule-list" id="live-checklist-container">
+              <!-- Renderizado dinámicamente por app.js -->
+            </div>
 
-          <div class="verdict-box verdict-red" id="live-verdict-banner">
-            Verificando condiciones institucionales...
+            <div class="verdict-box verdict-red" id="live-verdict-banner">
+              Verificando condiciones institucionales...
+            </div>
+
+            <!-- DISPARADOR SNIPER METATRADER 5 (100% AUTOMÁTICO) -->
+            <div id="sniper-mt5-container">
+              <!-- Inyectado por app.js cuando las 5 reglas están confirmadas -->
+            </div>
           </div>
         </div>
 
-        <!-- CARD 2: CALCULADORA CUANTITATIVA FUNDINGPIPS $10K -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">🧮 Calculadora FundingPips $10K</div>
-            <span class="badge badge-gold" id="calc-rule-badge">SL $2.5 - $10.0</span>
-          </div>
-
-          <div class="dir-switch">
-            <button class="dir-btn sell-active" id="calc-btn-sell">▼ SELL (Venta)</button>
-            <button class="dir-btn" id="calc-btn-buy">▲ BUY (Compra)</button>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Cuenta (USD)</label>
-              <input type="number" id="calc-account" value="10000" step="1000" />
+        <!-- CARD 2: CALCULADORA CUANTITATIVA FUNDINGPIPS $10K (COLAPSABLE / MINIMIZABLE) -->
+        <div class="card card-collapsible" id="card-calc">
+          <div class="card-header cursor-pointer" id="header-calc">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="collapse-icon" id="collapse-icon-calc">▾</span>
+              <div class="card-title">🧮 Calculadora $10K</div>
             </div>
-            <div class="form-group">
-              <label>Riesgo por Idea</label>
-              <select id="calc-risk-pct">
-                <option value="0.5" selected>0.50% ($50 Estándar)</option>
-                <option value="0.25">0.25% ($25 Conservador)</option>
-              </select>
+
+            <!-- Mini resumen cuando la calculadora está minimizada -->
+            <div class="mini-calc-summary" id="calc-mini-summary">
+              <span class="badge badge-blue" id="calc-mini-lots">0.08 Lotes</span>
+              <span class="badge badge-green" id="calc-mini-risk">$50 USD</span>
+              <span class="badge badge-gold" id="calc-mini-sl">SL 4.5 pts</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="badge badge-gold" id="calc-rule-badge">SL $2.5 - $10.0</span>
+              <button class="btn-micro" id="btn-collapse-calc" title="Minimizar / Expandir Calculadora" style="background:transparent;border:none;color:var(--fg-muted);cursor:pointer;font-size:14px;padding:0 4px;">−</button>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Precio Entrada (50% CE)</label>
-              <input type="number" id="calc-entry" value="4042.50" step="0.10" />
-            </div>
-            <div class="form-group">
-              <label style="display:flex;justify-content:space-between;">
-                <span>Stop Loss Técnico</span>
-                <a href="#" id="link-auto-buffer" style="font-size:10px;text-decoration:none;">±$5.0</a>
-              </label>
-              <input type="number" id="calc-sl" value="4048.50" step="0.10" />
-            </div>
-          </div>
-
-          <div class="calc-summary" id="calc-results-box">
-            <div class="kv-line">
-              <span style="color:var(--fg-muted);">Distancia Stop Loss:</span>
-              <span class="mono" id="res-delta">— pts (— pips)</span>
-            </div>
-            <div class="kv-line">
-              <span style="color:var(--fg-muted);">Riesgo Monetario Real:</span>
-              <span class="mono" style="color:var(--gold-bright);font-weight:700;" id="res-risk-usd">$50.00 USD</span>
-            </div>
-            <div class="kv-line">
-              <span style="color:var(--fg-muted);">Margen Escalonado FP:</span>
-              <span class="mono" id="res-margin">$— USD</span>
-            </div>
-            <div class="kv-line" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px;">
-              <span style="font-weight:700;color:var(--fg-bright);">LOTAJE TOTAL MT5:</span>
-              <span class="mono" style="font-size:16px;font-weight:800;color:var(--accent-bright);" id="res-lots-total">0.08 LOTES</span>
+          <div class="card-collapsible-body" id="body-calc">
+            <div class="dir-switch">
+              <button class="dir-btn sell-active" id="calc-btn-sell">▼ SELL (Venta)</button>
+              <button class="dir-btn" id="calc-btn-buy">▲ BUY (Compra)</button>
             </div>
 
-            <div class="ticket-split">
-              <div class="ticket-card tp1">
-                <div style="display:flex;justify-content:space-between;font-weight:700;color:var(--green-bright);">
-                  <span id="res-ord1-title">ORDEN 1 (0.04 Lotes)</span>
-                  <span class="mono" id="res-tp1-px">TP1: —</span>
-                </div>
-                <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">
-                  Ratio 1:1.5R (<strong style="color:var(--fg-bright);" id="res-tp1-usd">+$37.50</strong>) → Mover Orden 2 a <strong>Breakeven</strong>
-                </div>
+            <div class="form-row zen-hide">
+              <div class="form-group">
+                <label>Cuenta (USD)</label>
+                <input type="number" id="calc-account" value="10000" step="1000" />
               </div>
-
-              <div class="ticket-card">
-                <div style="display:flex;justify-content:space-between;font-weight:700;color:var(--accent-bright);">
-                  <span id="res-ord2-title">ORDEN 2 (0.04 Lotes)</span>
-                  <span class="mono" id="res-tp2-px">TP2: —</span>
-                </div>
-                <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">
-                  Runner 1:3.0R (<strong style="color:var(--fg-bright);" id="res-tp2-usd">+$75.00</strong>) → Liquidez Externa
-                </div>
+              <div class="form-group">
+                <label>Riesgo por Idea</label>
+                <select id="calc-risk-pct">
+                  <option value="0.5" selected>0.50% ($50 Estándar)</option>
+                  <option value="0.25">0.25% ($25 Conservador)</option>
+                </select>
               </div>
             </div>
-          </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-            <button class="btn btn-accent" id="btn-copy-ticket">📋 Copiar Boleto MT5</button>
-            <button class="btn" id="btn-send-to-journal">💾 Pasar a Diario</button>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Precio Entrada (50% CE)</label>
+                <input type="number" id="calc-entry" value="4042.50" step="0.10" />
+              </div>
+              <div class="form-group">
+                <label style="display:flex;justify-content:space-between;">
+                  <span>Stop Loss Técnico</span>
+                  <a href="#" id="link-auto-buffer" style="font-size:10px;text-decoration:none;">±$5.0</a>
+                </label>
+                <input type="number" id="calc-sl" value="4048.50" step="0.10" />
+              </div>
+            </div>
+
+            <div class="calc-summary" id="calc-results-box">
+              <div class="kv-line zen-hide">
+                <span style="color:var(--fg-muted);">Distancia Stop Loss:</span>
+                <span class="mono" id="res-delta">— pts (— pips)</span>
+              </div>
+              <div class="kv-line">
+                <span style="color:var(--fg-muted);">Riesgo Monetario Real:</span>
+                <span class="mono" style="color:var(--gold-bright);font-weight:700;" id="res-risk-usd">$50.00 USD</span>
+              </div>
+              <div class="kv-line zen-hide">
+                <span style="color:var(--fg-muted);">Margen Escalonado FP:</span>
+                <span class="mono" id="res-margin">$— USD</span>
+              </div>
+              <div class="kv-line" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px;">
+                <span style="font-weight:700;color:var(--fg-bright);">LOTAJE TOTAL MT5:</span>
+                <span class="mono" style="font-size:16px;font-weight:800;color:var(--accent-bright);" id="res-lots-total">0.08 LOTES</span>
+              </div>
+
+              <div class="ticket-split">
+                <div class="ticket-card tp1">
+                  <div style="display:flex;justify-content:space-between;font-weight:700;color:var(--green-bright);">
+                    <span id="res-ord1-title">ORDEN 1 (0.04 Lotes)</span>
+                    <span class="mono" id="res-tp1-px">TP1: —</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">
+                    Ratio 1:1.5R (<strong style="color:var(--fg-bright);" id="res-tp1-usd">+$37.50</strong>) → Mover Orden 2 a <strong>Breakeven</strong>
+                  </div>
+                </div>
+
+                <div class="ticket-card">
+                  <div style="display:flex;justify-content:space-between;font-weight:700;color:var(--accent-bright);">
+                    <span id="res-ord2-title">ORDEN 2 (0.04 Lotes)</span>
+                    <span class="mono" id="res-tp2-px">TP2: —</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">
+                    Runner 1:3.0R (<strong style="color:var(--fg-bright);" id="res-tp2-usd">+$75.00</strong>) → Liquidez Externa
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+              <button class="btn btn-accent" id="btn-copy-ticket">📋 Copiar Boleto MT5</button>
+              <button class="btn" id="btn-send-to-journal">💾 Pasar a Diario</button>
+            </div>
+            <button class="btn" id="btn-close-simulated-trade" style="width:100%;margin-top:8px;background:#238636;color:#fff;border:1px solid #2ea043;font-weight:800;padding:8px;cursor:pointer;" title="Cerrar la posición simulada al precio actual y registrar el profit en el Diario">
+              💰 Cerrar Simulación a Mercado (Cobrar Profit)
+            </button>
           </div>
         </div>
 
       </aside>
     </div>
 
-    <!-- FRANJA TÁCTICA INFERIOR (3 COLUMNAS) -->
-    <div class="tactical-bottom">
-
-      <!-- COL 1: SETUPS DETECTADOS POR EL ESCÁNER DE LAS 5 REGLAS -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🎯 Puntos de Entrada Detectados (Escáner 5 Reglas)</div>
-          <span class="badge badge-blue" id="setups-count-badge">0 Setups</span>
+    <!-- FRANJA TÁCTICA INFERIOR (3 COLUMNAS - MINIMIZABLE / OCULTA EN MODO ZEN) -->
+    <div class="card card-collapsible zen-hide" id="card-bottom-tactical" style="margin-top:12px;">
+      <div class="card-header cursor-pointer" id="header-bottom-tactical">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="collapse-icon" id="collapse-icon-tactical">▾</span>
+          <div class="card-title">📊 Diagnóstico, Setups e Información Táctica</div>
         </div>
-        <div style="font-size:11.5px;color:var(--fg-muted);margin-bottom:8px;">
-          Haz clic en cualquier setup para enfocar la vela exacta en el gráfico y cargar sus niveles en la calculadora:
-        </div>
-        <div class="setup-list" id="detected-setups-list">
-          <!-- Renderizado dinámicamente -->
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="badge badge-muted" id="tactical-summary-badge">Setups · Liquidez · Noticias</span>
+          <button class="btn-micro" id="btn-collapse-tactical" title="Minimizar / Expandir Paneles Inferiores" style="background:transparent;border:none;color:var(--fg-muted);cursor:pointer;font-size:14px;padding:0 4px;">−</button>
         </div>
       </div>
 
-      <!-- COL 2: BRIEFING TÁCTICO DE ATOM + MAPA DE LIQUIDEZ -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🧠 Diagnóstico en Vivo de ATOM & Imanes de Liquidez</div>
-          <span class="badge badge-purple" id="brief-zone-badge">—</span>
-        </div>
-        <div id="ares-briefing-box" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
-          <!-- Renderizado dinámicamente -->
-        </div>
-        <div style="margin-top:10px;max-height:165px;overflow-y:auto;">
-          <table class="data-table" id="liquidity-magnets-table">
-            <thead>
-              <tr>
-                <th>Nivel Clave</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-                <th>Distancia</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+      <div class="card-collapsible-body" id="body-bottom-tactical">
+        <div class="tactical-bottom" style="margin-top:0;">
+
+          <!-- COL 1: SETUPS DETECTADOS POR EL ESCÁNER DE LAS 5 REGLAS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🎯 Puntos de Entrada Detectados (Escáner 5 Reglas)</div>
+              <span class="badge badge-blue" id="setups-count-badge">0 Setups</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--fg-muted);margin-bottom:8px;">
+              Haz clic en cualquier setup para enfocar la vela exacta en el gráfico y cargar sus niveles en la calculadora:
+            </div>
+            <div class="setup-list" id="detected-setups-list">
+              <!-- Renderizado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- COL 2: BRIEFING TÁCTICO DE ATOM + MAPA DE LIQUIDEZ -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🧠 Diagnóstico en Vivo de ATOM & Imanes de Liquidez</div>
+              <span class="badge badge-purple" id="brief-zone-badge">—</span>
+            </div>
+            <div id="ares-briefing-box" style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+              <!-- Renderizado dinámicamente -->
+            </div>
+            <div style="margin-top:10px;max-height:165px;overflow-y:auto;">
+              <table class="data-table" id="liquidity-magnets-table">
+                <thead>
+                  <tr>
+                    <th>Nivel Clave</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Distancia</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- COL 3: CALENDARIO ECONÓMICO USD (HORA VENEZUELA) -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📅 Calendario USD · Hora Venezuela (VET)</div>
+              <span class="badge badge-muted">Regla ±5m Master</span>
+            </div>
+            <div style="max-height:300px;overflow-y:auto;">
+              <table class="data-table" id="usd-news-table">
+                <thead>
+                  <tr>
+                    <th>Día / Hora VET</th>
+                    <th>Evento USD</th>
+                    <th>Impacto</th>
+                    <th>Prev / Est</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </div>
-
-      <!-- COL 3: CALENDARIO ECONÓMICO USD (HORA VENEZUELA) -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📅 Calendario USD · Hora Venezuela (VET)</div>
-          <span class="badge badge-muted">Regla ±5m Master</span>
-        </div>
-        <div style="max-height:300px;overflow-y:auto;">
-          <table class="data-table" id="usd-news-table">
-            <thead>
-              <tr>
-                <th>Día / Hora VET</th>
-                <th>Evento USD</th>
-                <th>Impacto</th>
-                <th>Prev / Est</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -713,6 +794,149 @@
 
     </div>
   </section>
+
+  <!-- =====================================================================
+       DRAWER LATERAL DE HERRAMIENTAS (MENÚ HAMBURGUESA)
+       ===================================================================== -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="app-drawer" id="app-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <span style="font-size:18px;">⚛️</span>
+        <span>Herramientas ATOM</span>
+      </div>
+      <button class="btn-close-drawer" id="btn-close-drawer">&times;</button>
+    </div>
+
+    <div class="drawer-content">
+      <!-- SECCIÓN 1: VISTAS PRINCIPALES -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Vistas de la Plataforma</div>
+        <div class="drawer-nav-list">
+          <button class="drawer-nav-item active" data-tab="tab-live">
+            <span>📡</span> Radar en Vivo
+          </button>
+          <button class="drawer-nav-item" data-tab="tab-replay">
+            <span>⏪</span> Simulador Replay
+          </button>
+          <button class="drawer-nav-item" data-tab="tab-backtest">
+            <span>📈</span> Backtester (60D)
+          </button>
+          <button class="drawer-nav-item" data-tab="tab-journal">
+            <span>📓</span> Diario & Escalado
+          </button>
+          <button class="drawer-nav-item" data-tab="tab-kb">
+            <span>🏛️</span> Biblia del Oro & Reglas
+          </button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: CONFIGURACIÓN DEL GRÁFICO -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Configuración del Gráfico</div>
+        <div style="margin-bottom:10px;">
+          <label class="drawer-label">Activo / Flujo:</label>
+          <select id="drawer-source-select" class="drawer-select">
+            <option value="GC=F">XAU/USD · Institucional CME</option>
+            <option value="PAXGUSDT">PAXG/USD · Oro 24/7</option>
+            <option value="MT5">MetaTrader 5 · Local</option>
+          </select>
+        </div>
+        <div>
+          <label class="drawer-label">Temporalidad de Velas:</label>
+          <div class="drawer-tf-grid">
+            <button class="tf-btn" data-tf="1m">1m</button>
+            <button class="tf-btn active" data-tf="5m">5m</button>
+            <button class="tf-btn" data-tf="15m">15m</button>
+            <button class="tf-btn" data-tf="1h">1H</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: CAPAS VISUALES -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Capas Visuales del Gráfico</div>
+        <div class="drawer-toggle-list">
+          <label class="drawer-toggle-row">
+            <span>Horario Killzone NY</span>
+            <input type="checkbox" id="chk-layer-killzone" checked />
+          </label>
+          <label class="drawer-toggle-row">
+            <span>Rangos Asian & London</span>
+            <input type="checkbox" id="chk-layer-sessions" checked />
+          </label>
+          <label class="drawer-toggle-row">
+            <span>Niveles PDH / PDL / EQ</span>
+            <input type="checkbox" id="chk-layer-pdhpdl" checked />
+          </label>
+          <label class="drawer-toggle-row">
+            <span>Ineficiencias FVG (50% CE)</span>
+            <input type="checkbox" id="chk-layer-fvgs" checked />
+          </label>
+          <label class="drawer-toggle-row">
+            <span>Marcadores Sweeps & CISD</span>
+            <input type="checkbox" id="chk-layer-markers" checked />
+          </label>
+          <label class="drawer-toggle-row">
+            <span>Caja Riesgo/Beneficio</span>
+            <input type="checkbox" id="chk-layer-position" checked />
+          </label>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4: ACCIONES RÁPIDAS -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Acciones & Ayuda</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="btn btn-outline" id="drawer-btn-pick-entry">🎯 Fijar Entrada con Clic</button>
+          <button class="btn btn-outline" id="drawer-btn-pick-sl">🛑 Fijar Stop Loss con Clic</button>
+          <button class="btn btn-accent" id="drawer-btn-open-guide">❓ Guía para Principiantes</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MODAL EDUCATIVO: GUÍA SENCILLA PARA PRINCIPIANTES -->
+  <div class="modal-overlay" id="modal-beginner-guide">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>💡 Guía Rápida ATOM: Cómo Operar Sin Saber de Trading</span>
+        </div>
+        <button class="btn-close-modal" id="btn-close-guide">&times;</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:12.5px;line-height:1.5;">
+        <div style="background:#090d13;border-left:3px solid #388bfd;padding:10px 12px;border-radius:4px;">
+          <strong style="color:#FFF;">1. ¿Qué hace este bot por ti?</strong>
+          <p style="margin-top:4px;color:#8b949e;">ATOM vigila el precio del Oro en vivo. Calcula los horarios seguros, detecta los engaños de los grandes bancos y calcula matemáticamente el precio óptimo para que tú solo tengas que copiar los datos y ponerlos en tu MetaTrader.</p>
+        </div>
+
+        <div style="background:#090d13;border-left:3px solid #3fb950;padding:10px 12px;border-radius:4px;">
+          <strong style="color:#FFF;">2. Las 5 Reglas explicadas con sentido común:</strong>
+          <ul style="margin-top:6px;padding-left:18px;color:#8b949e;display:flex;flex-direction:column;gap:4px;">
+            <li><strong style="color:#C9D1D9;">R1. Horario Seguro:</strong> Solo operamos de 09:00 a 11:30 AM (Venezuela) y sin noticias de alto impacto en EE.UU.</li>
+            <li><strong style="color:#C9D1D9;">R2. El Engaño del Mercado:</strong> El precio hace una trampa con mecha arriba o abajo para engañar a los novatos antes de cambiar de dirección.</li>
+            <li><strong style="color:#C9D1D9;">R3. Fuerza Confirmada:</strong> Una vela fuerte y sólida demuestra que los grandes bancos entraron al mercado.</li>
+            <li><strong style="color:#C9D1D9;">R4. Punto con Descuento (50% CE):</strong> Esperamos a que el precio retroceda a un punto medio barato para no comprar caro ni vender barato.</li>
+            <li><strong style="color:#C9D1D9;">R5. Blindaje de Capital ($50 USD):</strong> Pase lo que pase, lo máximo que arriesgas son $50 USD. La ganancia se divide en 2 para asegurar dinero rápido y dejar correr el resto sin riesgo.</li>
+          </ul>
+        </div>
+
+        <div style="background:#090d13;border-left:3px solid #d29922;padding:10px 12px;border-radius:4px;">
+          <strong style="color:#FFF;">3. Tu rutina diaria de 3 pasos:</strong>
+          <p style="margin-top:4px;color:#8b949e;"><strong>Paso 1:</strong> Abre ATOM a las 08:55 AM (hora Venezuela).<br>
+          <strong>Paso 2:</strong> Deja la pantalla abierta. Si el semáforo se pone verde y suena la campana, se abrirá la tarjeta de la orden.<br>
+          <strong>Paso 3:</strong> Presiona el botón verde <strong>"Copiar Orden para MetaTrader"</strong> y colócala en tu aplicación de MetaTrader 5.<br>
+          <strong>Paso 4:</strong> Si a las 5:00 PM (17:00 VET) la orden sigue abierta, ciérrala a mercado para no pagar comisiones nocturnas.</p>
+        </div>
+
+        <div style="text-align:center;margin-top:6px;">
+          <button class="btn btn-accent" id="btn-close-guide-ok" style="padding:8px 24px;font-weight:700;">¡Entendido, vamos a operar!</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="toast" id="ares-toast">Acción completada</div>
 

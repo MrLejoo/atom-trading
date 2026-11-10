@@ -1,35 +1,52 @@
-# ⚛️ ATOM · Plataforma Cuantitativa XAU/USD (FundingPips $10K)
+# ⚛️ ATOM · Guía de Inicio Rápido (XAU/USD · FundingPips $10K)
 
-## 🚀 Cómo iniciar en esta computadora
+> **Diseñado para que cualquier persona pueda operar de forma profesional y segura, incluso sin experiencia previa en trading.**
 
-1. **Si es la primera vez que abres el proyecto en esta máquina:**
-   - Haz doble clic en `instalar_dependencias.bat` para instalar las librerías necesarias de Python (`starlette`, `uvicorn`, `requests`, `pandas`).
+---
 
-2. **Para abrir la plataforma:**
+## 🚀 Cómo abrir la plataforma en 1 minuto
+
+1. **Instalación inicial (Solo se hace la primera vez):**
+   - Haz doble clic en `instalar_dependencias.bat`.
+   - Espera a que termine de instalar las librerías necesarias.
+
+2. **Iniciar ATOM cada día:**
    - Haz doble clic en `gold_assistant\iniciar_atom.bat`.
    - Se abrirá automáticamente tu navegador en **http://127.0.0.1:8050**.
 
 ---
 
-## 🧭 ¿Qué contiene cada pestaña?
+## 🧭 ¿Cómo funciona la pantalla principal?
 
-1. **📡 Radar & Puntos de Entrada en Vivo:**
-   - Gráfico interactivo institucional con velas de 5m/1m.
-   - Detección automática de Killzone NY (09:00 - 11:30 VET), Asian/London Range y FVGs (50% CE).
-   - Checklist de las **5 Reglas de Oro** con veredicto en tiempo real.
-   - Calculadora cuantitativa de riesgo fijo en **$50 USD (0.5%)** con protocolo Split 50/50 (`TP1 1:1.5R + Breakeven` / `TP2 1:3.0R`).
-   - Mapa de imanes de liquidez y calendario USD en hora de Venezuela (VET UTC-4).
+En la pantalla principal verás 3 elementos clave:
 
-2. **⏪ Simulador Replay Vela a Vela:**
-   - 50 sesiones históricas de New York para entrenar el ojo institucional.
-   - Modo entrenamiento a ciegas (*Blind Mode*) para auditar tu lectura.
+1. **🚦 El Semáforo Superior Inteligente:**
+   - **🟡 Amarillo (Bot Vigilando):** El bot está analizando el mercado en vivo. No tienes que hacer nada; tu dinero está protegido.
+   - **🟢 Verde (¡Oportunidad Lista!):** Las 5 reglas se cumplieron. El bot hace sonar una campana y te muestra la orden lista para copiar.
+   - **🔴 Rojo (Pausa de Seguridad):** Fuera de horario o límite de pérdidas alcanzado. La plataforma se protege sola.
 
-3. **📈 Backtester Institucional (60 Días):**
-   - Estadísticas objetivas en cuenta de $10K (Win Rate, Profit Factor, Curva de Equidad).
+2. **🛡️ El Guardián de las 5 Reglas (Columna Derecha):**
+   - El bot audita automáticamente:
+     - **R1: ⏰ Horario Seguro:** Solo opera entre 09:00 y 11:30 AM (Venezuela) y sin noticias peligrosas en EE.UU.
+     - **R2: 🎣 Detección del Engaño:** Espera a que los bancos engañen a los novatos con un movimiento falso.
+     - **R3: 🚀 Confirmación de Fuerza:** Espera una vela contraria fuerte que confirme la verdadera dirección.
+     - **R4: 🎯 Punto con Descuento:** Entra en el punto medio exacto (**50% CE**) para comprar barato o vender caro.
+     - **R5: 🛡️ Blindaje de Capital:** Pérdida máxima blindada en **$50 USD**.
 
-4. **📓 Diario, Discrepancias & Escalado:**
-   - Bitácora persistente en SQLite (`ares_data.db`).
-   - Hoja de ruta de retiros por USDT ERC20 y escalado a $300K con copiador nativo.
+3. **🎯 Disparador Sniper para MetaTrader 5:**
+   - Cuando se da la señal, aparece el boleto de ejecución con todos los datos.
+   - Tienes el botón verde: **`📋 COPIAR ORDEN PARA METATRADER 5`**.
+   - Solo tocas el botón, abres tu app de MetaTrader 5 y pegas los números.
 
-5. **🏛️ Biblia del Oro & Reglas FundingPips:**
-   - Reglas críticas de la firma fondeada (bloqueo ±5 min en noticias USD de alto impacto, apalancamiento escalonado y cierre antes del rollover bancario a las 18:00 VET).
+---
+
+## 📅 Tu Rutina Diaria en 3 Pasos
+
+1. **08:55 AM (Hora Venezuela):** Abres la plataforma con `iniciar_atom.bat`.
+2. **09:00 a 11:30 AM:** Dejas la pantalla abierta. Si suena la alarma, copias el boleto y colocas la orden en MT5.
+3. **Antes de las 5:00 PM (17:00 VET):** Si la orden no ha cerrado sola, la cierras a mercado para no pagar comisiones nocturnas.
+
+---
+
+## ❓ ¿Tienes dudas?
+Haz clic en el botón **`❓ Guía para Principiantes`** en la esquina superior de la plataforma para ver explicaciones paso a paso de cada término.
